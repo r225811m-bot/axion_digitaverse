@@ -1,0 +1,13 @@
+flask
+flask-cors
+gunicorn
+requests
+pytest
+# For file uploads and static file serving
+werkzeug
+# For statistics and data science features in AxionAI
+numpy
+scipy
+pandas
+# For JSON handling (usually included, but explicit for Heroku)
+simplejson

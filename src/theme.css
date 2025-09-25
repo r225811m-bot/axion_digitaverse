@@ -1,0 +1,50 @@
+body {
+  background: linear-gradient(135deg, #181c2f 0%, #1c92d2 100%);
+  min-height: 100vh;
+  color: #fff;
+}
+
+.card {
+  background: rgba(30, 40, 60, 0.95) !important;
+  border-radius: 1.2rem !important;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37) !important;
+  border: 1px solid rgba(28, 146, 210, 0.18) !important;
+}
+
+.card:hover {
+  box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.47) !important;
+}
+
+.btn-primary, .btn-success {
+  background: linear-gradient(90deg, #1c92d2 0%, #181c2f 100%) !important;
+  border: none !important;
+  color: #fff !important;
+}
+
+.btn-primary:hover, .btn-success:hover {
+  background: linear-gradient(90deg, #181c2f 0%, #1c92d2 100%) !important;
+}
+
+input, .form-control {
+  background: #181c2f !important;
+  color: #fff !important;
+  border: 1px solid #1c92d2 !important;
+  border-radius: 1rem !important;
+}
+
+.navbar {
+  background: linear-gradient(90deg, #181c2f 0%, #1c92d2 100%) !important;
+}
+
+.carousel-item img {
+  border-radius: 1.2rem !important;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  background: #181c2f;
+}
+::-webkit-scrollbar-thumb {
+  background: #1c92d2;
+  border-radius: 4px;
+}
