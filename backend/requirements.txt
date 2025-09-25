@@ -11,3 +11,5 @@ scipy
 pandas
 # For JSON handling (usually included, but explicit for Heroku)
 simplejson
+werkzeug
+pytest
