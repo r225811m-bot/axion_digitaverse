@@ -61,7 +61,7 @@ function PythonIDE() {
 
   // Load file tree
   useEffect(() => {
-    fetch("https://axion-digitaverse-3.onrender.com/api/ide/tree")
+    fetch("https://axion-digitaverse-3.onrender.com/api/ide/list")
       .then(res => res.json())
       .then(setTree);
   }, [refresh]);
