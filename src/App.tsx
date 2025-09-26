@@ -54,7 +54,7 @@ function Navbar() {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
       <div className="container-fluid">
-        <Link className="navbar-brand fw-bold text-white" to="/">
+        <Link className="navbar-brand fw-bold text-white" to="/axion_digitaverse">
           <FaHome className="me-2 text-white" /> Axion Digitaverse
         </Link>
         <ul className="navbar-nav me-auto">
