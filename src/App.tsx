@@ -140,7 +140,7 @@ function App() {
       <BrowserRouter>
         <Navbar />
         <Routes>
-          <Route path="/axion_digitaverse" element={<WelcomePage />} />
+          <Route path="/" element={<WelcomePage />} />
           <Route path="/wallet" element={<Wallet />} />
           <Route path="/send" element={<SendAcoin />} />
           <Route path="/chain" element={<Explorer />} />
