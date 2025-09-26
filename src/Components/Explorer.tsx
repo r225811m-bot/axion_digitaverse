@@ -7,7 +7,7 @@ function Explorer() {
 
   useEffect(() => {
     const fetchChain = async () => {
-      const res = await fetch("http://localhost:5000/api/chain");
+      const res = await fetch("https://axion-digitaverse-3.onrender.com/api/chain");
       const data = await res.json();
       setChain(data);
       setLoading(false);

@@ -112,7 +112,7 @@ function Navbar() {
           {user && (
             <li className="nav-item d-flex align-items-center">
               <img
-                src={user.profilePic ? `http://localhost:5000/api/profile-pic/${user.address}` : "/default-profile.png"}
+                src={user.profilePic ? `https://axion-digitaverse-3.onrender.com/api/profile-pic/${user.address}` : "/default-profile.png"}
                 alt="Profile"
                 style={{ width: 36, height: 36, borderRadius: "50%", objectFit: "cover", marginRight: 8 }}
               />
@@ -140,7 +140,7 @@ function App() {
       <BrowserRouter>
         <Navbar />
         <Routes>
-          <Route path="/" element={<WelcomePage />} />
+          <Route path="/axion_digitaverse" element={<WelcomePage />} />
           <Route path="/wallet" element={<Wallet />} />
           <Route path="/send" element={<SendAcoin />} />
           <Route path="/chain" element={<Explorer />} />

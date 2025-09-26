@@ -4,7 +4,7 @@ function AxionAIDashboard() {
   const [report, setReport] = useState<any>(null);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/axion-ai/dashboard")
+    fetch("https://axion-digitaverse-3.onrender.com/api/axion-ai/dashboard")
       .then(res => res.json())
       .then(setReport);
   }, []);

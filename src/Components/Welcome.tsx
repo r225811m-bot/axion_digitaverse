@@ -27,7 +27,7 @@ function WelcomePage() {
     const formData = new FormData();
     formData.append("address", user.address);
     formData.append("profilePic", fileInputRef.current.files[0]);
-    const res = await fetch("http://localhost:5000/api/upload-profile-pic", {
+    const res = await fetch("https://axion-digitaverse-3.onrender.com/api/upload-profile-pic", {
       method: "POST",
       body: formData,
     });
@@ -40,7 +40,7 @@ function WelcomePage() {
   };
 
   const profilePicUrl = user?.profilePic
-    ? `http://localhost:5000/api/profile-pic/${user.address}?t=${Date.now()}`
+    ? `https://axion-digitaverse-3.onrender.com/api/profile-pic/${user.address}?t=${Date.now()}`
     : "/default-profile.png";
 
   return (

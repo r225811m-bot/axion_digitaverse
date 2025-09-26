@@ -11,7 +11,7 @@ function Wallet() {
     // Always fetch the latest balance from backend
     const fetchBalance = async () => {
       if (user?.address) {
-        const res = await fetch(`http://localhost:5000/api/wallet/${user.address}`);
+        const res = await fetch(`https://axion-digitaverse-3.onrender.com/api/wallet/${user.address}`);
         const data = await res.json();
         setBalance(data.balance);
         // Optionally update user context with new balance

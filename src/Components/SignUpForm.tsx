@@ -25,7 +25,7 @@ function SignUpForm() {
 
   const handleSignUp = async (e: any) => {
     e.preventDefault();
-    const res = await fetch("http://localhost:5000/api/create-user", {
+    const res = await fetch("https://axion-digitaverse-3.onrender.com/api/create-user", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username }),

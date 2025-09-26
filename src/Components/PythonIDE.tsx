@@ -61,7 +61,7 @@ function PythonIDE() {
 
   // Load file tree
   useEffect(() => {
-    fetch("http://localhost:5000/api/ide/list")
+    fetch("https://axion-digitaverse-3.onrender.com/api/ide/tree")
       .then(res => res.json())
       .then(setTree);
   }, [refresh]);
@@ -69,7 +69,7 @@ function PythonIDE() {
   // Load file content
   useEffect(() => {
     if (selected) {
-      fetch("http://localhost:5000/api/ide/open", {
+      fetch("https://axion-digitaverse-3.onrender.com/api/ide/open", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ path: selected }),
@@ -83,13 +83,13 @@ function PythonIDE() {
 
   // Load plugins
   useEffect(() => {
-    fetch("http://localhost:5000/api/ide/plugins")
+    fetch("https://axion-digitaverse-3.onrender.com/api/ide/plugins")
       .then(res => res.json())
       .then(setPlugins);
   }, []);
 
   const saveFile = () => {
-    fetch("http://localhost:5000/api/ide/save", {
+    fetch("https://axion-digitaverse-3.onrender.com/api/ide/save", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ path: selected, content }),
@@ -97,7 +97,7 @@ function PythonIDE() {
   };
 
   const runFile = () => {
-    fetch("http://localhost:5000/api/ide/run", {
+    fetch("https://axion-digitaverse-3.onrender.com/api/ide/run", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ path: selected }),
@@ -107,7 +107,7 @@ function PythonIDE() {
   };
 
   const testWorkspace = () => {
-    fetch("http://localhost:5000/api/ide/test", {
+    fetch("https://axion-digitaverse-3.onrender.com/api/ide/test", {
       method: "POST",
     })
       .then(res => res.json())
@@ -116,7 +116,7 @@ function PythonIDE() {
 
   const createFile = () => {
     if (!newFile) return;
-    fetch("http://localhost:5000/api/ide/create", {
+    fetch("https://axion-digitaverse-3.onrender.com/api/ide/create", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ path: newFile, isFolder: false }),
@@ -128,7 +128,7 @@ function PythonIDE() {
 
   const createFolder = () => {
     if (!newFolder) return;
-    fetch("http://localhost:5000/api/ide/create", {
+    fetch("https://axion-digitaverse-3.onrender.com/api/ide/create", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ path: newFolder, isFolder: true }),
@@ -140,7 +140,7 @@ function PythonIDE() {
 
   const deleteSelected = () => {
     if (!selected) return;
-    fetch("http://localhost:5000/api/ide/delete", {
+    fetch("https://axion-digitaverse-3.onrender.com/api/ide/delete", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ path: selected }),
@@ -151,7 +151,7 @@ function PythonIDE() {
   };
 
   const installPlugin = (plugin: string) => {
-    fetch("http://localhost:5000/api/ide/plugins", {
+    fetch("https://axion-digitaverse-3.onrender.com/api/ide/plugins", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ plugin }),

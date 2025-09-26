@@ -10,7 +10,7 @@ function AxionAI() {
   const askAI = async () => {
     setLoading(true);
     setReply("");
-    const res = await fetch("http://localhost:5000/api/axion-ai", {
+    const res = await fetch("https://axion-digitaverse-3.onrender.com/api/axion-ai", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ prompt }),

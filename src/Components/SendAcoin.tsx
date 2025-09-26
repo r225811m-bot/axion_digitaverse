@@ -11,7 +11,7 @@ function SendAcoin() {
   const send = async () => {
     if (!user) return;
     setStatus("Sending...");
-    const res = await fetch("http://localhost:5000/api/transaction", {
+    const res = await fetch("https://axion-digitaverse-3.onrender.com/api/transaction", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
