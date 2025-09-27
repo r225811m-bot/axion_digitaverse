@@ -63,9 +63,9 @@ class AxionAI:
 
     def ask(self, question):
         """Answers a general question using the generative AI model."""
-        # Add context about the blockchain for more relevant answers
         context = f"""
         You are Axion AI, a helpful assistant for the Axion Digitaverse blockchain platform.
+        The blockchain now supports smart contracts written in Python.
         Here are some current statistics about the blockchain: {self.chain_stats()}
         
         A user is asking a question. Please provide a helpful and concise response.
@@ -78,10 +78,12 @@ class AxionAI:
         return response.text
 
     def code_completion(self, prompt):
-        """Completes a smart contract code snippet using the AI model."""
+        """Completes a Python smart contract code snippet using the AI model."""
         full_prompt = f"""
-        You are an expert smart contract developer specializing in Solidity.
-        Your task is to complete the following code snippet.
+        You are an expert Python smart contract developer for the Axion Digitaverse blockchain.
+        Your task is to complete the following Python smart contract code snippet.
+        The contract will be executed in an environment that provides a `self.blockchain` object with methods like `get_balance(address)`.
+
         Provide only the code completion without any explanations or markdown.
         ---
         {prompt}
@@ -91,16 +93,20 @@ class AxionAI:
         return response.text
 
     def generate_contract(self, contract_type):
-        """Generates a complete, secure smart contract using the AI model."""
+        """Generates a complete, secure Python smart contract using the AI model."""
         prompt = f"""
-        You are an expert smart contract developer. Your task is to generate a secure,
-        well-documented, and production-ready Solidity smart contract.
-        
+        You are an expert Python smart contract developer for the Axion Digitaverse blockchain.
+        Your task is to generate a secure, well-documented, and production-ready Python smart contract.
+
+        The contract MUST be a Python class.
+        It MUST have an `__init__` method that can accept arguments.
+        It MUST have at least one other method that can be called.
+        It will be executed in an environment that provides a `self.blockchain` object with methods like `get_balance(address)` and `transfer(sender, recipient, amount)`.
+
         Contract Type: '{contract_type}'
-        
-        The contract should be complete, including the SPDX license identifier, pragma version,
-        a constructor, and at least one function demonstrating its core purpose.
-        Provide only the Solidity code, without any explanations or markdown.
+
+        Provide only the Python code for the class, without any explanations or markdown.
+        Do not include any import statements.
         """
         response = self.model.generate_content(prompt)
         return response.text
@@ -110,11 +116,10 @@ class AxionAI:
         stats = self.chain_stats()
         anomalies = self.detect_anomalies()
         
-        # Use AI to generate optimization suggestions based on the stats
         optimization_prompt = f"""
         You are a blockchain performance analyst. Based on the following statistics,
-        suggest one or two key optimizations to improve the chain's health,
-        focusing on gas fees and transaction speed.
+        suggest one or two key optimizations to improve the chain's health.
+        The blockchain supports Python smart contracts.
         
         Stats: {stats}
         Anomalies Detected: {anomalies}
