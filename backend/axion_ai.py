@@ -2,16 +2,20 @@ import google.generativeai as genai
 import statistics
 import os
 
-# --- API KEY CONFIGURATION ---
-# The API key is now securely fetched from an environment variable.
-# To get your key, visit Google AI Studio: https://aistudio.google.com/
-# You must set the 'GEMINI_API_KEY' environment variable in your deployment environment (e.g., Render.com).
-gemini_api_key = os.environ.get("AIzaSyD5W-RWhOj7r61X7sSOGX_BfFzmdqvMn4w")
-if not gemini_api_key:
-    # This will cause the application to fail on startup if the key is not set,
-    # making it clear in the deploy logs what the problem is.
-    raise ValueError("GEMINI_API_KEY environment variable not set. Please get your API key from Google AI Studio and set it in your Render.com environment.")
-genai.configure(api_key=gemini_api_key)
+# --- WARNING: INSECURE API KEY STORAGE ---
+# You have chosen to store the API key directly in the code.
+# This is NOT RECOMMENDED and is a major security risk.
+# If this code is in a public repository, your key will be exposed.
+# It is strongly advised to use environment variables instead.
+
+# --- Replace 'YOUR_API_KEY_HERE' with your actual Gemini API key. ---
+API_KEY = 'AIzaSyD5W-RWhOj7r61X7sSOGX_BfFzmdqvMn4w'
+
+if API_KEY == 'YOUR_API_KEY_HERE':
+    # This will cause a clear error if you forget to replace the placeholder.
+    raise ValueError("Please replace 'YOUR_API_KEY_HERE' with your actual Gemini API key in backend/axion_ai.py")
+
+genai.configure(api_key=API_KEY)
 
 
 class AxionAI:
