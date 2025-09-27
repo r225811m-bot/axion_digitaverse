@@ -182,6 +182,46 @@ def get_profile_pic(address):
                 return send_from_directory(UPLOAD_FOLDER, pic)
     return "", 404
 
+# --- AXION AI ENDPOINTS ---
+
+@app.route("/api/axion-ai", methods=["POST"])
+def axion_ai_chatbot():
+    """Handles chatbot requests by passing the user's prompt to the AxionAI class."""
+    prompt = request.json.get("prompt", "")
+    if not prompt:
+        return jsonify({"reply": "Please provide a prompt."})
+    
+    # Get a response from the AI model
+    reply = axion_ai.ask(prompt)
+    return jsonify({"reply": reply})
+
+@app.route("/api/axion-ai/dashboard", methods=["GET"])
+def axion_ai_dashboard():
+    """Returns a data science report from the AxionAI class."""
+    report = axion_ai.data_science_report()
+    return jsonify(report)
+
+@app.route("/api/axion-ai/code-completion", methods=["POST"])
+def axion_ai_code_completion():
+    """Provides AI-powered code completion for smart contracts."""
+    prompt = request.json.get("prompt", "")
+    completion = axion_ai.code_completion(prompt)
+    return jsonify({"completion": completion})
+
+@app.route("/api/axion-ai/generate-contract", methods=["POST"])
+def axion_ai_generate_contract():
+    """Generates a complete smart contract based on a given type."""
+    contract_type = request.json.get("type", "")
+    if not contract_type:
+        return jsonify({"error": "Contract type is required"}), 400
+    
+    contract = axion_ai.generate_contract(contract_type)
+    return jsonify({"contract": contract})
+
+
+# --- IDE ENDPOINTS ---
+# (These are unchanged)
+
 @app.route("/api/run-python", methods=["POST"])
 def run_python():
     data = request.json
@@ -310,36 +350,6 @@ def ide_plugins():
     plugin = request.json.get("plugin", "")
     return jsonify({"message": f"Plugin {plugin} installed (demo)"})
 
-@app.route("/api/axion-ai", methods=["POST"])
-def axion_ai_chatbot():
-    prompt = request.json.get("prompt", "").lower()
-    if "smart contract" in prompt:
-        reply = "A smart contract is a self-executing contract with the terms directly written into code."
-    elif "deploy" in prompt:
-        reply = "To deploy a contract, write your Python code, test it, and use the Deploy button in the IDE."
-    elif "acoin" in prompt:
-        reply = "Acoin is the native currency of the Axion Digitaverse blockchain."
-    elif "hello" in prompt or "hi" in prompt:
-        reply = "Hello! I'm Axion AI, your blockchain assistant. How can I help you?"
-    else:
-        reply = "I'm Axion AI. Ask me about blockchain, smart contracts, or using this platform!"
-    return jsonify({"reply": reply})
-
-@app.route("/api/axion-ai/dashboard", methods=["GET"])
-def axion_ai_dashboard():
-    return jsonify(axion_ai.data_science_report())
-
-@app.route("/api/axion-ai/code-completion", methods=["POST"])
-def axion_ai_code_completion():
-    prompt = request.json.get("prompt", "")
-    code = axion_ai.code_completion(prompt)
-    return jsonify({"completion": code})
-
-@app.route("/api/axion-ai/generate-contract", methods=["POST"])
-def axion_ai_generate_contract():
-    contract_type = request.json.get("type", "")
-    code = axion_ai.generate_contract(contract_type)
-    return jsonify({"contract": code})
 
 if __name__ == "__main__":
     app.run(debug=True)
