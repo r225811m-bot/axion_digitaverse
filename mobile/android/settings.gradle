@@ -14,7 +14,7 @@ pluginManagement {
     }.standardOutput.asText.get().trim(),
     "../android/expo-gradle-plugin"
   ).absolutePath
-  includeBuild(expoP-luginsPath)
+  includeBuild(expoPluginsPath)
 }
 
 plugins {
