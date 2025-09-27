@@ -1,4 +1,4 @@
-import { useUser } from "../UserContext";
+import { useUser, User } from "../UserContext";
 import { useEffect, useState, useCallback } from "react";
 import { FaWallet, FaCopy, FaServer } from "react-icons/fa";
 import "../App.css";
@@ -18,7 +18,7 @@ function Wallet() {
         if (res.ok) {
           setBalance(data.balance);
           setIsMiner(data.is_miner);
-          setUser((prev) => prev ? { ...prev, balance: data.balance, isMiner: data.is_miner } : prev);
+          setUser((prev: User | null) => prev ? { ...prev, balance: data.balance, isMiner: data.is_miner } : prev);
         } else {
           setStatus(data.error || "Failed to fetch wallet data");
         }

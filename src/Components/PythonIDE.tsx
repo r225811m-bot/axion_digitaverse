@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useUser } from "../UserContext";
-import { FaPlay, FaSave, FaFlask, FaFolder, FaFile, FaTrash, FaPlus, FaCloudUploadAlt, FaPhoneAlt, FaServer } from "react-icons/fa";
+import { FaPlay, FaSave, FaFolder, FaFile, FaTrash, FaPlus, FaCloudUploadAlt, FaPhoneAlt, FaServer } from "react-icons/fa";
 
 type FileTreeItem = {
   type: "file" | "folder";
