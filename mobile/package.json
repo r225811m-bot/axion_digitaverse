@@ -3,8 +3,8 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "android": "react-native run-android",
-    "ios": "react-native run-ios",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
     "start": "react-native start",
     "test": "jest",
     "lint": "eslint ."
@@ -19,6 +19,7 @@
     "react": "18.2.0",
     "react-native": "0.71.8",
     "react-native-document-picker": "^9.3.1",
+    "react-native-image-picker": "^8.2.1",
     "react-native-qrcode-svg": "^6.3.15"
   },
   "devDependencies": {
