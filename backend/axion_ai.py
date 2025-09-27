@@ -1,19 +1,17 @@
 import google.generativeai as genai
 import statistics
+import os
 
-# --- WARNING ---
-# It is not recommended to store your API key directly in the code.
-# This is done here for demonstration purposes only.
-# In a production environment, use environment variables or a secure key management system.
-#
-# --- ABOUT BILLING ---
-# The Google AI API has a free tier that is sufficient for development and most small to medium-sized applications.
-# You will need to add a billing account to your Google Cloud project to use the API, but you will not be charged
-# as long as you stay within the free tier limits (e.g., up to 60 requests per minute for the gemini-1.5-flash model).
-# This is primarily for identity verification and to prevent abuse.
-#
-# Get your API key from Google AI Studio: https://aistudio.google.com/
-genai.configure(api_key='AIzaSyD5W-RWhOj7r61X7sSOGX_BfFzmdqvMn4w') # IMPORTANT: Replace with your actual API key
+# --- API KEY CONFIGURATION ---
+# The API key is now securely fetched from an environment variable.
+# To get your key, visit Google AI Studio: https://aistudio.google.com/
+# You must set the 'GEMINI_API_KEY' environment variable in your deployment environment (e.g., Render.com).
+gemini_api_key = os.environ.get("AIzaSyD5W-RWhOj7r61X7sSOGX_BfFzmdqvMn4w")
+if not gemini_api_key:
+    # This will cause the application to fail on startup if the key is not set,
+    # making it clear in the deploy logs what the problem is.
+    raise ValueError("GEMINI_API_KEY environment variable not set. Please get your API key from Google AI Studio and set it in your Render.com environment.")
+genai.configure(api_key=gemini_api_key)
 
 
 class AxionAI:
@@ -63,19 +61,24 @@ class AxionAI:
 
     def ask(self, question):
         """Answers a general question using the generative AI model."""
-        context = f"""
-        You are Axion AI, a helpful assistant for the Axion Digitaverse blockchain platform.
-        The blockchain now supports smart contracts written in Python.
-        Here are some current statistics about the blockchain: {self.chain_stats()}
-        
-        A user is asking a question. Please provide a helpful and concise response.
-        
-        Question: {question}
-        
-        Answer:
-        """
-        response = self.model.generate_content(context)
-        return response.text
+        try:
+            context = f"""
+            You are Axion AI, a helpful assistant for the Axion Digitaverse blockchain platform.
+            The blockchain now supports smart contracts written in Python.
+            Here are some current statistics about the blockchain: {self.chain_stats()}
+            
+            A user is asking a question. Please provide a helpful and concise response.
+            
+            Question: {question}
+            
+            Answer:
+            """
+            response = self.model.generate_content(context)
+            return response.text
+        except Exception as e:
+            # Return a helpful error message to the user if the AI call fails
+            return f"Error communicating with the AI model: {e}"
+
 
     def code_completion(self, prompt):
         """Completes a Python smart contract code snippet using the AI model."""
