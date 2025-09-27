@@ -1,6 +1,7 @@
 import { useUser } from "../UserContext";
 import { useEffect, useState } from "react";
 import { FaWallet, FaCopy } from "react-icons/fa";
+import "../App.css";
 
 function Wallet() {
   const { user, setUser } = useUser();
@@ -43,23 +44,23 @@ function Wallet() {
   }
 
   return (
-    <div className="container py-5">
-      <div className="card shadow mx-auto p-4" style={{ maxWidth: 400 }}>
-        <h2 className="fw-bold text-white text-center mb-4">
+    <div className="container wallet-container">
+      <div className="card shadow wallet-card">
+        <h2 className="wallet-title">
           <FaWallet className="me-2 text-white" /> Wallet
         </h2>
-        <div className="fw-bold text-white mb-2">
+        <div className="wallet-info">
           Address: {user.address.slice(0, 8) + "..." + user.address.slice(-4)}
           <span className="ms-2" style={{ cursor: "pointer" }} onClick={handleCopy}>
             <FaCopy className="text-info" />
           </span>
           {copied && <span className="text-success fw-bold ms-2">Copied!</span>}
         </div>
-        <div className="fw-bold text-white mb-2">
+        <div className="wallet-info">
           Username: {user.username}
         </div>
-        <div className="fw-bold text-white mb-2">
-          Balance: <span className="text-success">{balance}</span> acoin
+        <div className="wallet-info">
+          Balance: <span className="wallet-balance">{balance}</span> acoin
         </div>
       </div>
     </div>

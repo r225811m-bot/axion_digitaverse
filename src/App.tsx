@@ -25,6 +25,7 @@ import {
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import "./App.css";
 
 // Shorten address for display
 function shortAddress(address: string) {
@@ -52,9 +53,9 @@ function Navbar() {
   };
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+    <nav className="navbar navbar-expand-lg navbar-dark bg-primary mb-4 navbar-custom">
       <div className="container-fluid">
-        <Link className="navbar-brand fw-bold text-white" to="/axion_digitaverse">
+        <Link className="navbar-brand fw-bold text-white navbar-brand-custom" to="/axion_digitaverse">
           <FaHome className="me-2 text-white" /> Axion Digitaverse
         </Link>
         <button
@@ -71,37 +72,37 @@ function Navbar() {
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav me-auto">
             <li className="nav-item">
-              <Link className="nav-link fw-bold text-white" to="/wallet">
+              <Link className="nav-link fw-bold text-white nav-link-custom" to="/wallet">
                 <FaWallet className="me-2 text-white" /> Wallet
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link fw-bold text-white" to="/send">
+              <Link className="nav-link fw-bold text-white nav-link-custom" to="/send">
                 <FaPaperPlane className="me-2 text-white" /> Send acoin
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link fw-bold text-white" to="/chain">
+              <Link className="nav-link fw-bold text-white nav-link-custom" to="/chain">
                 <FaSearch className="me-2 text-white" /> Explorer
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link fw-bold text-white" to="/ide">
+              <Link className="nav-link fw-bold text-white nav-link-custom" to="/ide">
                 <FaCode className="me-2 text-white" /> Python IDE
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link fw-bold text-white" to="/agents">
+              <Link className="nav-link fw-bold text-white nav-link-custom" to="/agents">
                 <FaUserSecret className="me-2 text-white" /> Agents
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link fw-bold text-white" to="/credits">
+              <Link className="nav-link fw-bold text-white nav-link-custom" to="/credits">
                 <FaUserCircle className="me-2 text-white" /> Credits
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link fw-bold text-white" to="/axion-ai">
+              <Link className="nav-link fw-bold text-white nav-link-custom" to="/axion-ai">
                 🤖 Axion AI
               </Link>
             </li>
@@ -110,25 +111,25 @@ function Navbar() {
             {!user && (
               <>
                 <li className="nav-item">
-                  <Link className="nav-link fw-bold text-white" to="/signup">
+                  <Link className="nav-link fw-bold text-white nav-link-custom" to="/signup">
                     <FaUser className="me-2 text-white" /> Sign Up
                   </Link>
                 </li>
                 <li className="nav-item">
-                  <Link className="nav-link fw-bold text-white" to="/login">
+                  <Link className="nav-link fw-bold text-white nav-link-custom" to="/login">
                     <FaUser className="me-2 text-white" /> Login
                   </Link>
                 </li>
               </>
             )}
             {user && (
-              <li className="nav-item d-flex align-items-center">
+              <li className="nav-item user-info-container">
                 <img
                   src={user.profilePic ? `https://axion-digitaverse-3.onrender.com/api/profile-pic/${user.address}` : "/default-profile.png"}
                   alt="Profile"
-                  style={{ width: 36, height: 36, borderRadius: "50%", objectFit: "cover", marginRight: 8 }}
+                  className="profile-pic-navbar"
                 />
-                <span className="fw-bold text-white me-2">
+                <span className="address-navbar">
                   {shortAddress(user.address)}
                 </span>
                 <span style={{ cursor: "pointer" }} onClick={handleCopy}>

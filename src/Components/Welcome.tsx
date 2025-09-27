@@ -2,6 +2,7 @@ import { useUser } from "../UserContext";
 import { FaCopy } from "react-icons/fa";
 import { QRCodeCanvas } from "qrcode.react";
 import { useState, useRef } from "react";
+import "../App.css";
 
 function shortAddress(address: string) {
   if (!address) return "";
@@ -44,14 +45,12 @@ function WelcomePage() {
     : "/default-profile.png";
 
   return (
-    <div className="d-flex justify-content-center align-items-center"
-         style={{ minHeight: "calc(100vh - 64px)" }}>
-      <div className="card shadow w-100"
-           style={{ maxWidth: 600, background: "rgba(255,255,255,0.15)", minHeight: 300 }}>
-        <h1 className="text-center mb-2" style={{ color: "#1c92d2", fontWeight: 700, fontSize: 28 }}>
+    <div className="welcome-container">
+      <div className="card shadow welcome-card">
+        <h1 className="welcome-title">
           Enjoy Your Web 3.0 with Axion Digitaverse Infrastructure
         </h1>
-        <p className="text-center fw-bold text-white fs-6" style={{ maxWidth: 500, margin: "0 auto" }}>
+        <p className="welcome-subtitle">
           Welcome to the future of decentralized finance, identity, and smart contracts.
         </p>
         {user && (
@@ -59,36 +58,36 @@ function WelcomePage() {
             <img
               src={profilePicUrl}
               alt="Profile"
-              style={{ width: 60, height: 60, borderRadius: "50%", cursor: "pointer" }}
+              className="profile-pic"
               onClick={() => setShowPopup(true)}
             />
-            <h5 className="mt-2 text-white fw-bold" style={{ fontSize: 18 }}>
+            <h5 className="welcome-username">
               Welcome, {user.username}!
             </h5>
-            <div className="d-flex justify-content-center align-items-center mt-2">
-              <span className="text-white fw-bold me-2" style={{ fontSize: 14 }}>
+            <div className="address-container">
+              <span className="address-text">
                 Address: {shortAddress(user.address)}
               </span>
-              <span className="me-2" style={{ cursor: "pointer" }} onClick={handleCopy}>
+              <span className="copy-icon" onClick={handleCopy}>
                 <FaCopy className="text-info" />
               </span>
               {copied && <span className="text-success fw-bold">Copied!</span>}
             </div>
-            <div className="mt-2">
+            <div className="qr-code-container">
               <QRCodeCanvas value={user.address} size={60} bgColor="#181c2f" fgColor="#1c92d2" />
-              <div className="fw-bold text-white mt-1" style={{ fontSize: 12 }}>
+              <div className="scan-text">
                 Scan to send acoin
               </div>
             </div>
-            <div className="fw-bold text-white mt-2" style={{ fontSize: 14 }}>
+            <div className="balance-text">
               Balance: {user.balance} acoin
             </div>
           </div>
         )}
       </div>
       {user && showPopup && (
-        <div className="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center" style={{ background: "rgba(0,0,0,0.5)", zIndex: 9999 }}>
-          <div className="card p-4" style={{ maxWidth: 350 }}>
+        <div className="popup-container">
+          <div className="card popup-card">
             <h5 className="fw-bold text-white mb-3">Profile Pic Options</h5>
             <button className="btn btn-secondary w-100 mb-2 fw-bold" onClick={() => setShowPopup(false)}>
               View Profile Pic

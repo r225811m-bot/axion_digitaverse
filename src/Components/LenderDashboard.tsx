@@ -3,6 +3,12 @@ import { useUser } from "../UserContext";
 import CreateLoan from "./CreateLoan";
 import { motion } from "framer-motion";
 
+// Helper function to shorten addresses
+function shortAddress(address: string) {
+  if (!address) return "";
+  return address.slice(0, 8) + "..." + address.slice(-4);
+}
+
 function LenderDashboard() {
   const { user } = useUser();
   const [loans, setLoans] = useState<any[]>([]);
@@ -10,7 +16,7 @@ function LenderDashboard() {
   const [approved, setApproved] = useState<number | null>(null);
 
   const fetchChain = async () => {
-    const res = await fetch("http://localhost:5000/api/chain");
+    const res = await fetch("https://axion-digitaverse-3.onrender.com/api/chain");
     const data = await res.json();
     const myLoans = data.filter((block: any) => block.data.type === "loan" && block.data.lender === user?.address);
     setLoans(myLoans);
@@ -28,7 +34,7 @@ function LenderDashboard() {
   }, []);
 
   const handleApprove = async (loanId: number) => {
-    await fetch("http://localhost:5000/api/approve-loan", {
+    await fetch("https://axion-digitaverse-3.onrender.com/api/approve-loan", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ loan_id: loanId, lender: user?.address })
@@ -70,7 +76,7 @@ function LenderDashboard() {
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.4, delay: idx * 0.1 }}
                     >
-                      <strong>Borrower:</strong> {req.data.borrower}<br />
+                      <strong>Borrower:</strong> {shortAddress(req.data.borrower)}<br />
                       <strong>Method:</strong> {req.data.method}<br />
                       <button
                         className="btn btn-success btn-sm mt-1"

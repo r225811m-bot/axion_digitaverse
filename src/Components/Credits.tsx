@@ -1,5 +1,4 @@
 import { FaUserCircle, FaEnvelope, FaUserSecret } from "react-icons/fa";
-import profilePic from "../assets/profile.jpeg";
 import { Link } from "react-router-dom";
 
 function Credits() {
@@ -21,7 +20,7 @@ function Credits() {
       >
         <div className="text-center">
           <img
-            src={profilePic}
+            src="https://via.placeholder.com/150"
             alt="Tendai Njanji"
             style={{
               width: 120,

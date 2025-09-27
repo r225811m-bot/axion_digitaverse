@@ -48,3 +48,35 @@ input, .form-control {
   background: #1c92d2;
   border-radius: 4px;
 }
+
+@media (max-width: 768px) {
+  .card {
+    border-radius: 1rem !important;
+  }
+  .btn-primary, .btn-success {
+    font-size: 0.9rem;
+  }
+  input, .form-control {
+    border-radius: 0.8rem !important;
+    font-size: 0.9rem;
+  }
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+}
+
+@media (max-width: 576px) {
+  .card {
+    border-radius: 0.8rem !important;
+  }
+  .btn-primary, .btn-success {
+    font-size: 0.8rem;
+  }
+  input, .form-control {
+    border-radius: 0.6rem !important;
+    font-size: 0.8rem;
+  }
+  ::-webkit-scrollbar {
+    width: 4px;
+  }
+}
