@@ -1,15 +1,10 @@
-flask
-flask-cors
+Flask
+Flask-Cors
 gunicorn
 requests
 pytest
-# For file uploads and static file serving
-werkzeug
-# For statistics and data science features in AxionAI
 numpy
 scipy
 pandas
-# For JSON handling (usually included, but explicit for Heroku)
-simplejson
 werkzeug
-pytest
+google-generativeai
