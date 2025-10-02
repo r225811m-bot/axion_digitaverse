@@ -3,7 +3,6 @@ import { useUser } from "../UserContext";
 import { FaCopy } from "react-icons/fa";
 import { QRCodeCanvas } from "qrcode.react";
 import { useState, useRef } from "react";
-import Digitaverse from "./Digitaverse"; // Import the new component
 import "../App.css";
 
 function shortAddress(address: string) {
