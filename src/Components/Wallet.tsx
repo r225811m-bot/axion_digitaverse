@@ -1,4 +1,5 @@
-import { useUser, User } from "../UserContext";
+import { useUser } from "../UserContext";
+import type { User } from "../UserContext";
 import { useEffect, useState, useCallback } from "react";
 import { FaWallet, FaCopy, FaServer } from "react-icons/fa";
 import "../App.css";

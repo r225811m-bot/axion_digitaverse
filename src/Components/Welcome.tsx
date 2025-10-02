@@ -1,7 +1,9 @@
+
 import { useUser } from "../UserContext";
 import { FaCopy } from "react-icons/fa";
 import { QRCodeCanvas } from "qrcode.react";
 import { useState, useRef } from "react";
+import Digitaverse from "./Digitaverse"; // Import the new component
 import "../App.css";
 
 function shortAddress(address: string) {
@@ -46,6 +48,7 @@ function WelcomePage() {
 
   return (
     <div className="welcome-container">
+      
       <div className="card shadow welcome-card">
         <h1 className="welcome-title">
           Enjoy Your Web 3.0 with Axion Digitaverse Infrastructure

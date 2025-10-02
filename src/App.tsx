@@ -1,3 +1,4 @@
+
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import { UserProvider, useUser } from "./UserContext";
 import Wallet from "./Components/Wallet";
@@ -11,6 +12,7 @@ import WelcomePage from "./Components/Welcome";
 import Agents from "./Components/Agents";
 import AxionAI from "./Components/AxionAI";
 import AxionAIDashboard from "./Components/AxionAIDashboard";
+import Hosting from "./Components/Hosting";
 import {
   FaWallet,
   FaPaperPlane,
@@ -22,6 +24,8 @@ import {
   FaUserSecret,
   FaSignOutAlt,
   FaCopy,
+  FaComments,
+  FaCloud,
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
@@ -106,6 +110,16 @@ function Navbar() {
                 🤖 Axion AI
               </Link>
             </li>
+            <li className="nav-item">
+              <Link className="nav-link fw-bold text-white nav-link-custom" to="/chat">
+                <FaComments className="me-2 text-white" /> Chat
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link fw-bold text-white nav-link-custom" to="/hosting">
+                <FaCloud className="me-2 text-white" /> Hosting
+              </Link>
+            </li>
           </ul>
           <ul className="navbar-nav ms-auto">
             {!user && (
@@ -165,6 +179,8 @@ function App() {
           <Route path="/login" element={<LoginForm />} />
           <Route path="/axion-ai" element={<AxionAI />} />
           <Route path="/axion-ai-dashboard" element={<AxionAIDashboard />} />
+          
+          <Route path="/hosting" element={<Hosting />} />
         </Routes>
       </BrowserRouter>
     </UserProvider>
