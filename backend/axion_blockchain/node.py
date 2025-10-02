@@ -1,12 +1,17 @@
-from flask import Flask, request, jsonify, abort
+
+from flask import Flask, request, jsonify, abort, send_file
 from axion_blockchain import Blockchain, generate_key_pair
 from p2p import PeerNetwork
+from file_storage import FileStorage
 import sys
 import threading
+import os
+import io
 
 app = Flask(__name__)
 blockchain = Blockchain()
 peers = PeerNetwork()
+file_storage = FileStorage(peers) 
 users = {}  # {address: private_key}
 
 @app.route("/api/create-user", methods=["POST"])
@@ -89,6 +94,96 @@ def add_peer():
     data = request.json
     peers.add_peer(data["peer_url"])
     return jsonify({"message": "Peer added"})
+
+@app.route("/api/store-file", methods=["POST"])
+def store_file():
+    authenticate()
+    if 'file' not in request.files:
+        return jsonify({"error": "No file part"}), 400
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify({"error": "No selected file"}), 400
+
+    # Save the file temporarily
+    file_path = os.path.join("backend/uploads", file.filename)
+    file.save(file_path)
+
+    # Split the file into chunks
+    chunks = file_storage.split_file(file_path)
+    
+    # Store the chunks
+    file_storage.store_chunks(chunks)
+    
+    # Get chunk hashes
+    chunk_hashes = [chunk[0] for chunk in chunks]
+
+    # Add a transaction to the blockchain
+    address = request.headers.get("X-Address")
+    file_data = {
+        "type": "file_storage",
+        "filename": file.filename,
+        "chunk_hashes": chunk_hashes,
+    }
+    block = blockchain.mine_block(file_data, miner_address=address)
+    peers.broadcast_chain(blockchain.to_dict())
+
+    # Clean up the temporary file
+    os.remove(file_path)
+
+    return jsonify({"message": "File stored successfully", "block": block.to_dict()})
+
+
+@app.route("/api/retrieve-file/<transaction_id>", methods=["GET"])
+def retrieve_file(transaction_id):
+    authenticate()
+    
+    # Find the transaction in the blockchain
+    transaction = None
+    for block in blockchain.chain:
+        for tx in block.data:
+            if tx.get('id') == transaction_id and tx.get('type') == 'file_storage':
+                transaction = tx
+                break
+        if transaction:
+            break
+            
+    if not transaction:
+        return jsonify({"error": "File transaction not found"}), 404
+
+    chunk_hashes = transaction['chunk_hashes']
+    
+    # Retrieve the file from chunks
+    try:
+        file_data = file_storage.retrieve_file(chunk_hashes)
+        return send_file(
+            io.BytesIO(file_data),
+            mimetype='application/octet-stream',
+            as_attachment=True,
+            attachment_filename=transaction['filename']
+        )
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/chunk/<chunk_hash>", methods=["GET"])
+def get_chunk(chunk_hash):
+    chunk_data = peers.chunks.get(chunk_hash)
+    if chunk_data:
+        return chunk_data
+    else:
+        abort(404)
+
+@app.route("/api/chunk", methods=["POST"])
+def receive_chunk():
+    data = request.json
+    chunk_hash = data.get('chunk_hash')
+    chunk_data_hex = data.get('chunk_data')
+    if chunk_hash and chunk_data_hex:
+        chunk_data = bytes.fromhex(chunk_data_hex)
+        peers.chunks[chunk_hash] = chunk_data
+        return jsonify({"message": "Chunk received"})
+    else:
+        return jsonify({"error": "Invalid chunk data"}), 400
 
 def sync_with_peers():
     import time
