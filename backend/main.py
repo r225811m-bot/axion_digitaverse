@@ -63,11 +63,11 @@ setup_genesis_user_and_balance()
 
 # --- MINER ENDPOINTS ---
 
-@app.route("/api/miners", methods=["GET"])
+@app.route("https://axion-digitaverse-3.onrender.com/api/miners", methods=["GET"])
 def list_miners():
     return jsonify(get_miners())
 
-@app.route("/api/register-miner", methods=["POST"])
+@app.route("https://axion-digitaverse-3.onrender.com/api/register-miner", methods=["POST"])
 def register_miner():
     data = request.json
     address = data.get("address")
@@ -90,17 +90,17 @@ def register_miner():
 
 # --- BLOCKCHAIN & WALLET ENDPOINTS ---
 
-@app.route("/api/chain", methods=["GET"])
+@app.route("https://axion-digitaverse-3.onrender.com/api/chain", methods=["GET"])
 def get_chain():
     return jsonify(blockchain.to_dict())
 
-@app.route("/api/wallet/<address>", methods=["GET"])
+@app.route("https://axion-digitaverse-3.onrender.com/api/wallet/<address>", methods=["GET"])
 def get_wallet(address):
     balance = blockchain.get_balance(address)
     is_miner = address in get_miners()
     return jsonify({"address": address, "balance": balance, "is_miner": is_miner})
 
-@app.route("/api/mint", methods=["POST"])
+@app.route("https://axion-digitaverse-3.onrender.com/api/mint", methods=["POST"])
 def mint():
     data = request.json
     to_address = data["to"]
@@ -109,7 +109,7 @@ def mint():
     blockchain.mine_block(mint_data, miner_address=None)
     return jsonify({"message": f"Minted {amount} to {to_address}"})
 
-@app.route("/api/transaction", methods=["POST"])
+@app.route("https://axion-digitaverse-3.onrender.com/api/transaction", methods=["POST"])
 def create_transaction():
     data = request.json
     sender = data["from"]
@@ -126,7 +126,7 @@ def create_transaction():
 
 # --- USER MANAGEMENT & PROFILE ---
 
-@app.route("/api/create-user", methods=["POST"])
+@app.route("https://axion-digitaverse-3.onrender.com/api/create-user", methods=["POST"])
 def create_user():
     username = request.json["username"]
     public_key, private_key = generate_key_pair(username)
@@ -134,7 +134,7 @@ def create_user():
     blockchain.mine_block(user_data, miner_address=None)
     return jsonify({"message": "User created", "publicKey": public_key, "privateKey": private_key}), 201
 
-@app.route("/api/login", methods=["POST"])
+@app.route("https://axion-digitaverse-3.onrender.com/api/login", methods=["POST"])
 def login():
     data = request.json
     public_key = data.get("publicKey", "")
@@ -166,7 +166,7 @@ def login():
 
     return jsonify({"message": "Invalid credentials"}), 401
     
-@app.route("/api/upload-profile-pic", methods=["POST"])
+@app.route("https://axion-digitaverse-3.onrender.com/api/upload-profile-pic", methods=["POST"])
 def upload_profile_pic():
     address = request.form["address"]
     miner = request.form.get("miner") or get_random_miner()
@@ -178,14 +178,14 @@ def upload_profile_pic():
         return jsonify({"error": "No file"}), 400
         
     file = request.files["profilePic"]
-    filename = f"{address}_{int(time.time())}_{file.filename}"
+    filename = f'{address}_{int(time.time())}_{file.filename}'
     file.save(os.path.join(UPLOAD_FOLDER, filename))
     
     pic_update_data = {"type": "profile_update", "address": address, "profilePic": filename, "gas": GAS_FEE}
     blockchain.mine_block(pic_update_data, miner_address=miner)
     return jsonify({"message": "Profile pic updated", "profilePic": filename}), 200
 
-@app.route("/api/profile-pic/<address>", methods=["GET"])
+@app.route("https://axion-digitaverse-3.onrender.com/api/profile-pic/<address>", methods=["GET"])
 def get_profile_pic(address):
     for block in reversed(blockchain.chain):
         transactions = block.data if isinstance(block.data, list) else [block.data]
@@ -196,9 +196,96 @@ def get_profile_pic(address):
                     return send_from_directory(UPLOAD_FOLDER, pic)
     return "", 404
 
+@app.route("https://axion-digitaverse-3.onrender.com/api/contacts/add", methods=["POST"])
+def add_contact():
+    data = request.json
+    user_address = data.get("user_address")
+    contact_address = data.get("contact_address")
+    miner = data.get("miner") or get_random_miner()
+
+    if not user_address or not contact_address:
+        return jsonify({"error": "User address and contact address are required"}), 400
+
+    if blockchain.get_balance(user_address) < GAS_FEE:
+        return jsonify({"error": "Insufficient balance to add a contact (gas fee)"}), 400
+
+    contact_data = {
+        "type": "add_contact",
+        "user_address": user_address,
+        "contact_address": contact_address,
+        "gas": GAS_FEE,
+    }
+    
+    block = blockchain.mine_block(contact_data, miner_address=miner)
+    return jsonify({"message": "Contact added successfully", "block": block.to_dict()}), 201
+
+@app.route("https://axion-digitaverse-3.onrender.com/api/contacts/<address>", methods=["GET"])
+def get_contacts(address):
+    contacts = []
+    for block in blockchain.chain:
+        transactions = block.data if isinstance(block.data, list) else [block.data]
+        for tx in transactions:
+            if tx.get("type") == "add_contact" and tx.get("user_address") == address:
+                contacts.append(tx.get("contact_address"))
+    
+    # Now, for each contact address, let's fetch the user information
+    contact_details = []
+    for contact_address in contacts:
+        user_info = None
+        for block in reversed(blockchain.chain):
+            transactions = block.data if isinstance(block.data, list) else [block.data]
+            for tx in transactions:
+                if tx.get("type") == "user" and tx.get("address") == contact_address:
+                    user_info = {
+                        "username": tx.get("username"),
+                        "address": tx.get("address"),
+                        "profilePic": tx.get("profilePic", "")
+                    }
+                    break
+            if user_info:
+                break
+        if user_info:
+            contact_details.append(user_info)
+
+    return jsonify(contact_details)
+
+@app.route("/api/status", methods=["POST"])
+def set_status():
+    data = request.json
+    address = data.get("address")
+    status = data.get("status")
+    miner = data.get("miner") or get_random_miner()
+
+    if not address or not status:
+        return jsonify({"error": "Address and status are required"}), 400
+
+    if blockchain.get_balance(address) < GAS_FEE:
+        return jsonify({"error": "Insufficient balance to set a status (gas fee)"}), 400
+
+    status_data = {
+        "type": "set_status",
+        "address": address,
+        "status": status,
+        "gas": GAS_FEE,
+    }
+    
+    block = blockchain.mine_block(status_data, miner_address=miner)
+    return jsonify({"message": "Status set successfully", "block": block.to_dict()}), 201
+
+@app.route("https://axion-digitaverse-3.onrender.com/api/status/<address>", methods=["GET"])
+def get_status(address):
+    latest_status = ""
+    for block in reversed(blockchain.chain):
+        transactions = block.data if isinstance(block.data, list) else [block.data]
+        for tx in transactions:
+            if tx.get("type") == "set_status" and tx.get("address") == address:
+                latest_status = tx.get("status")
+                return jsonify({"status": latest_status})
+    return jsonify({"status": ""})
+
 # --- SMART CONTRACT ENDPOINTS (AXION VM) ---
 
-@app.route("/api/contract/deploy", methods=["POST"])
+@app.route("https://axion-digitaverse-3.onrender.com/api/contract/deploy", methods=["POST"])
 def deploy_contract_endpoint():
     data = request.json
     contract_code = data.get("code", "")
@@ -223,7 +310,7 @@ def deploy_contract_endpoint():
     blockchain.mine_block(deployment_data, miner_address=miner)
     return jsonify({"message": "Contract deployed successfully", "contract_address": address}), 201
 
-@app.route("/api/contract/call", methods=["POST"])
+@app.route("https://axion-digitaverse-3.onrender.com/api/contract/call", methods=["POST"])
 def call_contract_endpoint():
     data = request.json
     contract_address = data.get("address")
@@ -246,29 +333,29 @@ def call_contract_endpoint():
     blockchain.mine_block(call_data, miner_address=miner)
     return jsonify({"message": "Contract call successful", "result": result})
 
-@app.route("/api/contract/<contract_address>", methods=["GET"])
+@app.route("https://axion-digitaverse-3.onrender.com/api/contract/<contract_address>", methods=["GET"])
 def get_contract_state_endpoint(contract_address):
     state = axion_vm.get_contract_state(contract_address)
     if state is None: return jsonify({"error": "Contract not found"}), 404
     return jsonify({"contract_address": contract_address, "state": state})
 
-@app.route("/api/contracts", methods=["GET"])
+@app.route("https://axion-digitaverse-3.onrender.com/api/contracts", methods=["GET"])
 def get_all_contracts():
     return jsonify([{"address": addr, "state": axion_vm.get_contract_state(addr)} for addr in axion_vm.contracts])
 
 # --- AXION AI ENDPOINTS ---
-@app.route("/api/axion-ai", methods=["POST"])
+@app.route("https://axion-digitaverse-3.onrender.com/api/axion-ai", methods=["POST"])
 def axion_ai_chatbot():
     reply = axion_ai.ask(request.json.get("prompt", ""))
     return jsonify({"reply": reply})
 
-@app.route("/api/axion-ai/dashboard", methods=["GET"])
+@app.route("https://axion-digitaverse-3.onrender.com/api/axion-ai/dashboard", methods=["GET"])
 def axion_ai_dashboard():
     report = axion_ai.data_science_report()
     return jsonify(report)
 
 # --- IDE & FILE MANAGEMENT ENDPOINTS ---
-@app.route("/api/ide/run", methods=["POST"])
+@app.route("https://axion-digitaverse-3.onrender.com/api/ide/run", methods=["POST"])
 def ide_run():
     rel_path = request.json.get("path", "")
     abs_path = os.path.join(IDE_ROOT, rel_path)
@@ -289,7 +376,7 @@ def ide_run():
         sys.stdout = old_stdout
     return jsonify({"output": output})
 
-@app.route("/api/ide/list", methods=["GET"])
+@app.route("https://axion-digitaverse-3.onrender.com/api/ide/list", methods=["GET"])
 def ide_list():
     def walk_dir(path):
         items = []
@@ -302,7 +389,7 @@ def ide_list():
         return items
     return jsonify(walk_dir(IDE_ROOT))
 
-@app.route("/api/ide/open", methods=["POST"])
+@app.route("https://axion-digitaverse-3.onrender.com/api/ide/open", methods=["POST"])
 def ide_open():
     rel_path = request.json.get("path", "")
     abs_path = os.path.join(IDE_ROOT, rel_path)
@@ -311,7 +398,7 @@ def ide_open():
     with open(abs_path, "r", encoding="utf-8") as f:
         return jsonify({"content": f.read()})
 
-@app.route("/api/ide/save", methods=["POST"])
+@app.route("https://axion-digitaverse-3.onrender.com/api/ide/save", methods=["POST"])
 def ide_save():
     rel_path = request.json.get("path", "")
     content = request.json.get("content", "")
